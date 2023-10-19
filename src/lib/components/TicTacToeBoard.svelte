@@ -38,7 +38,10 @@
 	}
 
 	function handleGame(x: number, y: number) {
-		if (!myTurn || x < 0 || x > 2 || y < 0 || y > 2 || !connection || board[y][x]) return;
+		if (!myTurn || winner || x < 0 || x > 2 || y < 0 || y > 2 || !connection || board[y][x]) {
+			return;
+		}
+
 		board[y][x] = player;
 		board = board;
 		connection.send(board);

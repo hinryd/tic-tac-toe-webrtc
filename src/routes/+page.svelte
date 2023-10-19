@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Peer, DataConnection } from 'peerjs';
-	import { goto } from '$app/navigation';
-	import Board from '$lib/components/Board.svelte';
+	import Board from '$lib/components/TicTacToeBoard.svelte';
 
 	let peer: Peer;
 	let peerId = '';
@@ -11,15 +10,17 @@
 	let player = 'X';
 
 	function handleJoin(e: SubmitEvent) {
-		if (!e.target) return;
+		if (!e.target) return (isError = true);
+
 		const formEl = e.target as HTMLFormElement;
 		const formData = new FormData(formEl);
 		const data = new Map(formData);
 		const friendId = data.get('friendId')?.toString();
-		if (!friendId) return;
+		if (!friendId || friendId === peerId) return (isError = true);
 
 		const conn = peer.connect(friendId);
-		if (connection) return;
+		if (connection) return (isError = true);
+
 		conn.once('open', () => {
 			console.log('connection opened');
 			player = 'O';
